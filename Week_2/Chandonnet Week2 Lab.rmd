@@ -1,0 +1,116 @@
+---
+title: "Week 2 Exercises"
+author: "Your Name Here"
+date: "May 14, 2022"
+output: pdf_document
+---
+
+Please complete all exercises below. You may use stringr, lubridate, or the forcats library. 
+
+Place this at the top of your script:
+library(stringr)
+library(lubridate)
+library(forcats)
+
+# Exercise 1
+Read the sales_pipe.txt file into an R data frame as sales. 
+
+Ray Note:  use relative folder address;  Look at the data and determine what delimiter is being used
+
+```{r}
+# Your code here
+
+```
+
+# Exercise 2
+You can extract a vector of columns names from a data frame using the colnames() function. Notice the first column has some odd characters. Change the column name for the FIRST column in the sales date frame to Row.ID. 
+
+**Note: You will need to assign the first element of colnames to a single character.**.  
+
+Ray note: What does this mean?
+
+```{r}
+# Your code here
+
+```
+
+# Exercise 3
+Convert both Order.ID and Order.Date to date vectors within the sales data frame. What is the number of days between the most recent order and the oldest order?
+How many years is that?
+How many weeks?
+
+**Note: Use lubridate**
+
+```{r}
+# Your code here
+
+```
+
+
+# Exercise 4
+What is the average number of days it takes to ship an order?
+
+Ray note:  Find difference between order and ship as a vector and then solve for the mean
+
+```{r}
+# Your code here
+
+```
+
+
+# Exercise 5
+How many customers have the first name Bill?
+You will need to split the customer name into first and last name segments and then use a regular expression to match the first name bill. Use the length() function to determine the number of customers with the first name Bill in the sales data. 
+
+```{r}
+# Your code here
+
+```
+
+# Exercise 6
+How many mentions of the word 'table' are there in the Product.Name column? 
+**Note you can do this in one line of code**
+
+```{r}
+# Your code here
+
+```
+
+# Exercise 7
+Create a table of counts for each state in the sales data. The counts table should be ordered alphabetically from A to Z. 
+
+Ray note:  There is a specific data type that will order them
+
+```{r}
+# Your code here
+
+```
+
+# Exercise 8
+Create an alphabetically ordered barplot for each sales Category in the State of Texas. 
+
+```{r}
+# Your code here
+
+```
+
+# Exercise 9
+Find the average profit by region.
+**Note: You will need to use the aggregate() function to do this. To understand how the function works type ?aggregate in the console.**
+
+```{r}
+# Your code here
+
+```
+
+# Exercise 10
+Find the average profit by order year. 
+**Note: You will need to use the aggregate() function to do this. To understand how the function works type ?aggregate in the console.**
+
+Ray note:  Will need to extract the order year from the order date
+```{r}
+# Your code here
+
+```
+
+
