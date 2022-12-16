@@ -51,3 +51,4 @@ dict1.pop(4)
 print(dict1.items())
 
 
+print(dict2)

@@ -1,0 +1,207 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "88671a38",
+   "metadata": {},
+   "source": [
+    "# Homework 5\n",
+    "### Ray Chandonnet\n",
+    "### November 26, 2022"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "822c38b0",
+   "metadata": {},
+   "source": [
+    "Answer each question by writing the Python code needed to perform the task. Please only use the libraries requested in each problem. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c25d3684",
+   "metadata": {},
+   "source": [
+    "### Problem 1\n",
+    "Load the interest_inflation data from the statsmodels library as a pandas data frame assigned to `df`. Use the function `df.head()` to view the first 5 rows of the data. Notice the first observation is indexed at 0. Unlike R, Python is a 0 based index language which means when you iterate or wish to view the first observation of a data object it will be at the index 0. \n",
+    "\n",
+    "What do the columns `Dp` and `R` represent? (You can find this using the documentation)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "723f0215",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# your code here\n",
+    "from statsmodels.datasets.interest_inflation.data import load_pandas\n",
+    "df = load_pandas().data\n",
+    "df.head()\n",
+    "\n",
+    "# Dp is the Delta log GDP deflator\n",
+    "# R is the nominal long term interest rate"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "688cb579",
+   "metadata": {},
+   "source": [
+    "### Problem 2\n",
+    "Import scipy as sp and numpy as np. Using the `mean()` and `var()` function from scipy, validate that both functions equate to their numpy counterparts against the column `Dp`.\n",
+    "\n",
+    "By using the scipy library you should receive a warning message. What does the warning message indicate? Which function should you use going forward? "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "83dc8d7f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import scipy as sp\n",
+    "import numpy as np\n",
+    "mean_from_scipy = sp.mean(df['Dp'])\n",
+    "mean_from_numpy =np.mean(df['Dp'])\n",
+    "equivalent1 = mean_from_numpy == mean_from_scipy\n",
+    "equivalent1\n",
+    "var_from_scipy = sp.var(df['Dp'])\n",
+    "var_from_numpy =np.var(df['Dp'])\n",
+    "equivalent2 = var_from_numpy == var_from_scipy\n",
+    "equivalent2\n",
+    "\n",
+    "# The error message when you calculate mean with scipy warns of \"deprecation\".  Deprecation means that a function\n",
+    "# is likely to be discontinued in later releases.  So since the deprecation warning comes from using scipy, we should\n",
+    "# use the mean function from numpy going forward"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7334bad9",
+   "metadata": {},
+   "source": [
+    "### Problem 3\n",
+    "Fit an OLS regression (linear regression) using the statsmodels api where `y = df['Dp']` and `x = df['R']`. By default OLS estimates the theoretical mean of the dependent variable y. Statsmodels.ols does not fit a constant value by default so be sure to add a constant to `x`. Extract the coefficients into a variable named `res1_coefs`. See the documentation for `params`. Finally print the `summary()` of the model. \n",
+    "\n",
+    "Documentation: https://www.statsmodels.org/dev/generated/statsmodels.regression.linear_model.OLS.html"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "30e5d02a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import statsmodels.api as sm\n",
+    "x = df['R']\n",
+    "y = df['Dp']\n",
+    "x= sm.add_constant(x)\n",
+    "result1 = sm.OLS(y,x).fit()\n",
+    "res1_coefs=result1.params\n",
+    "print(result1.summary())\n",
+    "print(res1_coefs)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f630fe6c",
+   "metadata": {},
+   "source": [
+    "### Problem 4\n",
+    "Fit a quantile regression model using the statsmodels api using the formula `Dp ~ R`. By default quantreg creates a constant so there is no need to add one to this model. In your `fit()` method be sure to set `q = 0.5` so that we are estimating the theoritical median.  Extract the coefficients into a variable named `res2_coefs`.  Finally print the `summary()` of the model. \n",
+    "\n",
+    "\n",
+    "Documentation: https://www.statsmodels.org/dev/generated/statsmodels.regression.quantile_regression.QuantReg.html"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4731c2e4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import statsmodels.formula.api as smf\n",
+    "result2 = smf.quantreg(\"Dp ~ R\",df).fit(q=0.5)\n",
+    "res2_coefs =result2.params\n",
+    "print(result2.summary())\n",
+    "print(res2_coefs)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2d0d47d5",
+   "metadata": {},
+   "source": [
+    "### Problem 5\n",
+    "\n",
+    "Part 1: Use the `type()` method to determine the type of `res1_coefs` and `res2_coefs`. Print the type in a Jupyter cell. \n",
+    "\n",
+    "Part 2: In the next Jupyter cell show that `res1_coefs > res2_coefs`. What does the error mean? To resolve this error we must convert the data to an unnamed object or change the names of the objects. Since we are not focusing on pandas this week we will simply convert to a different data type.\n",
+    "\n",
+    "Part 3: Now, do the same comparision using the `tolist()` function at the end of each object name. \n",
+    "\n",
+    "Part 4: We performed two types of linear regression and compared their coefficients. Coefficients are essentially the rate at which x changes the values of y. Do some research on what OLS estimates versus what quantreg estimates and explain why we have two different coefficient estimates. In which cases do you think quantile regression will be useful? What about ordinary least squares regression? "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "554fbe9a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "type1 = type(res1_coefs)\n",
+    "type2 = type(res2_coefs)\n",
+    "print(type1)\n",
+    "print(type2)\n",
+    "test_greater1 = res1_coefs > res2_coefs\n",
+    "print(test_greater1)\n",
+    "# This generates an error, since comparison operations cannot be performed on data type \"class\", which has multiple \n",
+    "# pieces of data with their values and attributes.  So we convert these to list types to make a comparison\n",
+    "list1 = res1_coefs.tolist()\n",
+    "list2 = res2_coefs.tolist()\n",
+    "test_greater2 = list1 > list2\n",
+    "print(test_greater2)\n",
+    "# The Ordinary Least Squares (\"OLS\") method estimates the dependent variable as the mean (average) result across\n",
+    "# given independent variables   The Quantile method estimates the dependent variable as the median result across \n",
+    "# given independent variables.  Mean vs. median is an important statistical distinction.  When your data is pretty \n",
+    "# normally distributed, mean and median are quite similar and you can use either method - though OLS is likely preferred\n",
+    "# However, when you have outlier data that can skew the results of a mean calculation, the use of median is preferable\n",
+    "# which translates into using a Quantile regression method."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a1ac1049",
+   "metadata": {},
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.15"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
