@@ -1,0 +1,1084 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{ChandonnetPythonProject}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{final-python-project}{%
+\section{Final Python Project}\label{final-python-project}}
+
+\hypertarget{ray-chandonnet}{%
+\subsubsection{Ray Chandonnet}\label{ray-chandonnet}}
+
+\hypertarget{section}{%
+\subsubsection{12/16/2022}\label{section}}
+
+    Key Assumptions and modeling approaches:
+
+Assumptions: - All salaries in the Salary file are already in USD and so
+no FX conversion was done (this wasn't totally clear but seemed the
+case) - Only used salary for jobs titled as Data Scientist - Assigned
+experience levels as follows: \textasciitilde{} 0-5 years experience =
+``Junior'' \textasciitilde{} \textgreater5 years experience =
+````Senior'' - Used all salaries for all dates, meaning I assume the
+data is pretty evenly distributed across years for all cities (Otherwise
+data is actually not granular enough to be meaningful) - I only use CASH
+compensation to calculate affordability, since you can't pay bills with
+stock grants, which are intended to build wealth and usually are on a
+vesting schedule
+
+Modeling approaches:
+
+\begin{itemize}
+\tightlist
+\item
+  I consider the most important index to be ``Cost of Living Plus Rent''
+  which factors in housing costs which are a critical component of cost
+  of living
+\item
+  The cost of living indexes provided use NYC as the baseline index of
+  100, so all other indexes are expressed relative to NYC
+\item
+  Given that, I construct a comparable ``salary index'' for all cities
+  in the salary file, also relative to NYC. So NYC is 100; if a job pays
+  only 75\% less than the average comparable job in NYC it gets a salary
+  index of 75; If it pays 1.2x a comparable job in NYC it gets a salary
+  index of 120
+\item
+  These indexes are done using separate average salaries for the two
+  experience levels I created, to avoid skewing results where more
+  junior or senior people exist in a given city, making salaries seem
+  higher or lower than they really area
+\item
+  I then create an ``affordability index'' which is salary index divided
+  by cost of living index. Since both indices are relative to NYC, NYC
+  is deemed to have an affordability index of 100, with more affordable
+  cities than NYC having an index higher than 100 and less affordable
+  cities than NYC having an index the result
+\item
+  The idea is that how affordable a city is a function of how much you
+  earn relative to the cost of living there. If an area costs a lot less
+  to live than NYC, but pays almost as much, it's more affordable. The
+  converse is also true.\\
+\item
+  I then rank order the cities by affordability, for both junior and
+  senior people.
+\item
+  I also ran a few plots to see if there was a difference (skew) in
+  overall affordability for junior vs senior people, and also ran
+\end{itemize}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} import needed libraries and set file path prefix}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{seaborn} \PY{k}{as} \PY{n+nn}{sns}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{n}{path} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{/users/raychandonnet/Dropbox (Personal)/Merrimack College \PYZhy{} }\PY{l+s+se}{\PYZbs{}}
+\PY{l+s+s2}{MS in Data Science/DSE5002/Python Project/}\PY{l+s+s2}{\PYZdq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{part-1-data-wrangling-the-cost-of-living-index-file}{%
+\section{Part 1: Data Wrangling the Cost of Living Index
+File}\label{part-1-data-wrangling-the-cost-of-living-index-file}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{n}{path} \PY{o}{+} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{cost\PYZus{}of\PYZus{}living.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{o}{=}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{o}{.}\PY{n}{rename}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PYZbs{}
+  \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cost of Living Plus Rent Index}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{RealCOL\PYZus{}Index}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Step 1 \PYZhy{} Break the City up \PYZhy{} requires a lot of cleaning because city and }
+\PY{c+c1}{\PYZsh{} country are in the same field separated by}
+\PY{c+c1}{\PYZsh{} a comma, and US cities also have the state in form city, st, country.  }
+\PY{c+c1}{\PYZsh{} I want to break these up into separate columns to link to the country}
+\PY{c+c1}{\PYZsh{} code data, then pull in job info for those city / country combos}
+\PY{c+c1}{\PYZsh{} First, split the city into three separate fields}
+\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{City}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{=}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{City}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PYZbs{}
+    \PY{n}{split}\PY{p}{(}\PY{n}{pat}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{,}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{n}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,}\PY{n}{expand}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} This leaves the city state and country correct for US cities, but has the }
+\PY{c+c1}{\PYZsh{} country in the city column for non\PYZhy{}US cities and \PYZdq{}None\PYZdq{} for country, so we }
+\PY{c+c1}{\PYZsh{} have to fix that  It\PYZsq{}s two steps:}
+\PY{c+c1}{\PYZsh{} First, repalce all the \PYZdq{}None\PYZdq{} in Country column with the State value which }
+\PY{c+c1}{\PYZsh{} is where the Country is. Then eliminate the dups by putting \PYZdq{}\PYZhy{}\PYZdq{} in the State}
+\PY{c+c1}{\PYZsh{} field for all those.  So we basically just swapped values to get the country}
+\PY{c+c1}{\PYZsh{} in the right place}
+\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PYZbs{}
+    \PY{n}{fillna}\PY{p}{(}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} Puts the state value in country where NA}
+\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PYZbs{}
+                                 \PY{o}{==}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} It took me more time than I care to admit to realize that my states and }
+\PY{c+c1}{\PYZsh{} countries had padded whitespace and so weren\PYZsq{}t matching when I tried to }
+\PY{c+c1}{\PYZsh{} merge in the country code data!!! Sigh....using the strip method fixes that}
+\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{strip}\PY{p}{(}\PY{p}{)}
+\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{strip}\PY{p}{(}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} This leaves us with City, State and Country, with country spelled out}
+\PY{c+c1}{\PYZsh{} Now I can merge in the country codes from that file into my table.  This }
+\PY{c+c1}{\PYZsh{} will let me connect to data in the salary and jobs files once I do some }
+\PY{c+c1}{\PYZsh{} stuff with that data, if I need to use a code instead of the country}
+\PY{c+c1}{\PYZsh{} spelled out}
+\PY{n}{countrycodes}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}excel}\PY{p}{(}\PY{n}{path}\PY{o}{+}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{country\PYZus{}codes.xlsx}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{merge}\PY{p}{(}\PY{n}{left}\PY{o}{=}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{,}\PY{n}{right}\PY{o}{=}\PY{n}{countrycodes}\PY{p}{,}
+                        \PY{n}{how}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{left}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{on}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+   Rank       City  Cost of Living Index  Rent Index  RealCOL\_Index  \textbackslash{}
+0   NaN   Hamilton                149.02       96.10         124.22
+1   NaN     Zurich                131.24       69.26         102.19
+2   NaN      Basel                130.93       49.38          92.70
+3   NaN        Zug                128.13       72.12         101.87
+4   NaN     Lugano                123.99       44.99          86.96
+5   NaN   Lausanne                122.03       59.55          92.74
+6   NaN     Beirut                120.47       27.76          77.01
+7   NaN       Bern                118.16       46.12          84.39
+8   NaN     Geneva                114.05       75.05          95.77
+9   NaN  Stavanger                104.61       35.38          72.16
+
+   Groceries Index  Restaurant Price Index  Local Purchasing Power Index  \textbackslash{}
+0           157.89                  155.22                         79.43
+1           136.14                  132.52                        129.79
+2           137.07                  130.95                        111.53
+3           132.61                  130.93                        143.40
+4           129.17                  119.80                        111.96
+5           122.56                  127.01                        127.01
+6           141.33                  116.95                         15.40
+7           118.37                  120.88                        112.46
+8           112.70                  126.31                        120.60
+9           102.46                  107.51                         85.90
+
+  State      Country Alpha-2 code Alpha-3 code  Numeric
+0     -      Bermuda           BM          BMU     60.0
+1     -  Switzerland           CH          CHE    756.0
+2     -  Switzerland           CH          CHE    756.0
+3     -  Switzerland           CH          CHE    756.0
+4     -  Switzerland           CH          CHE    756.0
+5     -  Switzerland           CH          CHE    756.0
+6     -      Lebanon           LB          LBN    422.0
+7     -  Switzerland           CH          CHE    756.0
+8     -  Switzerland           CH          CHE    756.0
+9     -       Norway           NO          NOR    578.0
+    \end{Verbatim}
+
+    \hypertarget{part-2---data-wrangling-the-salary-data}{%
+\section{Part 2 - Data wrangling the salary
+data}\label{part-2---data-wrangling-the-salary-data}}
+
+    I chose to use this data as the source for my income in calculating
+salary indexes relative to NY, a necessary pre-requisite to calculating
+an affordability index. There so many different ways we could slice and
+dice the data - I will be focusing on cash compensation and seniority,
+specifically for the salaries listed there as Data Scientist
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Read in the salaries file and do some data wrangling here as well to}
+\PY{c+c1}{\PYZsh{} convert the time stamp to a date, and put the cities and countries in the}
+\PY{c+c1}{\PYZsh{} right columns}
+\PY{c+c1}{\PYZsh{}}
+\PY{c+c1}{\PYZsh{} I did not end up using the date column in any way \PYZhy{} ran out of time}
+\PY{c+c1}{\PYZsh{} But wanted to show I knew how to convert it}
+\PY{n}{salaries}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{n}{path}\PY{o}{+}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Levels\PYZus{}Fyi\PYZus{}Salary\PYZus{}Data.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} read data}
+\PY{n}{salaries}\PY{o}{=}\PY{n}{salaries}\PY{p}{[}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{title}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Data Scientist}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{c+c1}{\PYZsh{} Slice the DS jobs}
+\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{timestamp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{to\PYZus{}datetime}\PY{p}{(}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{timestamp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} convert date}
+\PY{n}{salaries}\PY{o}{=}\PY{n}{salaries}\PY{o}{.}\PY{n}{rename}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{timestamp}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{date}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{,}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)} \PY{c+c1}{\PYZsh{}rename date column}
+\PY{n}{salaries}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{City}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{=}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{location}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PYZbs{}
+    \PY{n+nb}{str}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{n}{pat}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{,}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{n}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,}\PY{n}{expand}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Now fill in \PYZdq{}United States\PYZdq{} where country is blank, delete the state for }
+\PY{c+c1}{\PYZsh{} non\PYZhy{}US locations, and remove whitespace}
+\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{fillna}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{United States}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} 
+\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{!=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{United States}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)} \PY{c+c1}{\PYZsh{} delete states for non\PYZhy{}US}
+\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{strip}\PY{p}{(}\PY{p}{)}
+\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{strip}\PY{p}{(}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{salaries}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+                   date    company            level           title  \textbackslash{}
+419 2018-06-05 14:06:30   LinkedIn           Senior  Data Scientist
+440 2018-06-08 09:49:25  Microsoft               64  Data Scientist
+444 2018-06-08 17:55:09       ebay               26  Data Scientist
+454 2018-06-10 19:39:35    Twitter            Staff  Data Scientist
+495 2018-06-17 11:39:38   Facebook                5  Data Scientist
+499 2018-06-17 19:02:50     Amazon               L5  Data Scientist
+509 2018-06-20 00:47:43  Microsoft               65  Data Scientist
+510 2018-06-20 00:49:11     Google               L6  Data Scientist
+513 2018-06-21 10:54:35    Netflix           Senior  Data Scientist
+523 2018-06-25 08:45:29      Tesla  Senior Engineer  Data Scientist
+
+     totalyearlycompensation           location  yearsofexperience  \textbackslash{}
+419                   233000  San Francisco, CA                4.0
+440                   218000        Seattle, WA               11.0
+444                   180000       San Jose, CA               10.0
+454                   500000  San Francisco, CA                4.0
+495                   370000        Seattle, WA                8.0
+499                   200000        Seattle, WA                3.0
+509                   340000       Bellevue, WA               11.0
+510                   690000       Kirkland, WA               10.0
+513                   600000      Los Gatos, CA                3.0
+523                   168000      Palo Alto, CA                8.0
+
+     yearsatcompany                     tag  basesalary  {\ldots}  Race\_Asian  \textbackslash{}
+419             0.0           Data Analysis    162000.0  {\ldots}           0
+440            11.0                 ML / AI    165000.0  {\ldots}           0
+444             5.0                     NaN         0.0  {\ldots}           0
+454             4.0                 ML / AI    200000.0  {\ldots}           0
+495             3.0                     NaN    190000.0  {\ldots}           0
+499             0.0                 ML / AI    150000.0  {\ldots}           0
+509            11.0                 ML / AI    200000.0  {\ldots}           0
+510             0.0                 ML / AI    240000.0  {\ldots}           0
+513             1.0                 ML / AI    600000.0  {\ldots}           0
+523             3.0  Mechanical Engineering    118000.0  {\ldots}           0
+
+     Race\_White Race\_Two\_Or\_More Race\_Black  Race\_Hispanic  Race  Education  \textbackslash{}
+419           0                0          0              0   NaN        NaN
+440           0                0          0              0   NaN        NaN
+444           0                0          0              0   NaN        NaN
+454           0                0          0              0   NaN        NaN
+495           0                0          0              0   NaN        NaN
+499           0                0          0              0   NaN        NaN
+509           0                0          0              0   NaN        NaN
+510           0                0          0              0   NaN        NaN
+513           0                0          0              0   NaN        NaN
+523           0                0          0              0   NaN        NaN
+
+              City  State        Country
+419  San Francisco     CA  United States
+440        Seattle     WA  United States
+444       San Jose     CA  United States
+454  San Francisco     CA  United States
+495        Seattle     WA  United States
+499        Seattle     WA  United States
+509       Bellevue     WA  United States
+510       Kirkland     WA  United States
+513      Los Gatos     CA  United States
+523      Palo Alto     CA  United States
+
+[10 rows x 32 columns]
+    \end{Verbatim}
+
+    \hypertarget{part-3-enriching-the-salary-data}{%
+\section{Part 3: Enriching the salary
+data}\label{part-3-enriching-the-salary-data}}
+
+    Now I'm going to enrich the data a bit to make it more granular and make
+more sense: First, I calculate ``cashcomp'' as cash compensation = base
++ bonus.Then I tag each salary with a ``Junior'' or ``Senior''
+experience level as noted above
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cashcomp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{basesalary}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{+}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bonus}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} 
+\PY{n}{salaries}\PY{o}{=}\PY{n}{salaries}\PY{p}{[}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cashcomp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{!=}\PY{l+m+mi}{0}\PY{p}{]}  \PY{c+c1}{\PYZsh{} eliminate zeros }
+\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{explevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{yearsofexperience}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{\PYZlt{}}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,}
+                              \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Junior}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Senior}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{salaries}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+                   date    company            level           title  \textbackslash{}
+419 2018-06-05 14:06:30   LinkedIn           Senior  Data Scientist
+440 2018-06-08 09:49:25  Microsoft               64  Data Scientist
+454 2018-06-10 19:39:35    Twitter            Staff  Data Scientist
+495 2018-06-17 11:39:38   Facebook                5  Data Scientist
+499 2018-06-17 19:02:50     Amazon               L5  Data Scientist
+509 2018-06-20 00:47:43  Microsoft               65  Data Scientist
+510 2018-06-20 00:49:11     Google               L6  Data Scientist
+513 2018-06-21 10:54:35    Netflix           Senior  Data Scientist
+523 2018-06-25 08:45:29      Tesla  Senior Engineer  Data Scientist
+535 2018-06-26 21:37:46    GrubHub               II  Data Scientist
+
+     totalyearlycompensation           location  yearsofexperience  \textbackslash{}
+419                   233000  San Francisco, CA                4.0
+440                   218000        Seattle, WA               11.0
+454                   500000  San Francisco, CA                4.0
+495                   370000        Seattle, WA                8.0
+499                   200000        Seattle, WA                3.0
+509                   340000       Bellevue, WA               11.0
+510                   690000       Kirkland, WA               10.0
+513                   600000      Los Gatos, CA                3.0
+523                   168000      Palo Alto, CA                8.0
+535                   187000       New York, NY                4.0
+
+     yearsatcompany                     tag  basesalary  {\ldots}  \textbackslash{}
+419             0.0           Data Analysis    162000.0  {\ldots}
+440            11.0                 ML / AI    165000.0  {\ldots}
+454             4.0                 ML / AI    200000.0  {\ldots}
+495             3.0                     NaN    190000.0  {\ldots}
+499             0.0                 ML / AI    150000.0  {\ldots}
+509            11.0                 ML / AI    200000.0  {\ldots}
+510             0.0                 ML / AI    240000.0  {\ldots}
+513             1.0                 ML / AI    600000.0  {\ldots}
+523             3.0  Mechanical Engineering    118000.0  {\ldots}
+535             1.0                 ML / AI    150000.0  {\ldots}
+
+     Race\_Two\_Or\_More  Race\_Black Race\_Hispanic Race  Education  \textbackslash{}
+419                 0           0             0  NaN        NaN
+440                 0           0             0  NaN        NaN
+454                 0           0             0  NaN        NaN
+495                 0           0             0  NaN        NaN
+499                 0           0             0  NaN        NaN
+509                 0           0             0  NaN        NaN
+510                 0           0             0  NaN        NaN
+513                 0           0             0  NaN        NaN
+523                 0           0             0  NaN        NaN
+535                 0           0             0  NaN        NaN
+
+              City  State        Country  cashcomp  explevel
+419  San Francisco     CA  United States  172000.0    Junior
+440        Seattle     WA  United States  188000.0    Senior
+454  San Francisco     CA  United States  220000.0    Junior
+495        Seattle     WA  United States  230000.0    Senior
+499        Seattle     WA  United States  231000.0    Junior
+509       Bellevue     WA  United States  260000.0    Senior
+510       Kirkland     WA  United States  312000.0    Senior
+513      Los Gatos     CA  United States  600000.0    Junior
+523      Palo Alto     CA  United States  118000.0    Senior
+535       New York     NY  United States  160000.0    Junior
+
+[10 rows x 34 columns]
+    \end{Verbatim}
+
+    \hypertarget{part-4---aggregating-by-citylevel-isolating-nyc}{%
+\section{Part 4 - Aggregating by city/level, isolating
+NYC}\label{part-4---aggregating-by-citylevel-isolating-nyc}}
+
+    Now I aggregate by city, state, country and experience level,
+calculating mean salary for each subset. Then, since in the cost of
+living data, the indexes re calculated using NYC as baseline (100
+index), I calculate a ``salary index'' for each city and experience
+combination, relative to that same experience level in NYC so everything
+is on a common denominator
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{sal\PYZus{}by\PYZus{}city}\PY{o}{=}\PY{n}{salaries}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{City}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{explevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                             \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{n}{avg\PYZus{}salary}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cashcomp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                                                             \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{)}\PY{p}{)} 
+\PY{n}{NYCsal}\PY{o}{=}\PY{n}{salaries}\PY{p}{[}\PY{n}{salaries}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{City}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{New York}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{c+c1}{\PYZsh{} Extract all the NYC jobs}
+\PY{n}{NYC\PYZus{}by\PYZus{}level}\PY{o}{=}\PY{n}{NYCsal}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{explevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{agg}\PY{p}{(}
+    \PY{n}{NYC\PYZus{}avg\PYZus{}salary}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cashcomp}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{} Calc NYC mean salaries by level}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{sal\PYZus{}by\PYZus{}ctry}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{sal\PYZus{}by\PYZus{}city}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{NYC\PYZus{}by\PYZus{}level}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+     Country explevel     avg\_salary
+0  Australia   Junior   89333.333333
+1  Australia   Senior  213500.000000
+2    Austria   Junior   17000.000000
+3     Brazil   Senior   28000.000000
+4     Canada   Junior   95297.297297
+     Country       City State explevel  avg\_salary
+0  Australia   Canberra     -   Junior     93000.0
+1  Australia  Melbourne     -   Junior     67000.0
+2  Australia  Melbourne     -   Senior    142000.0
+3  Australia     Sydney     -   Junior    108000.0
+4  Australia     Sydney     -   Senior    285000.0
+          NYC\_avg\_salary
+explevel
+Junior     156672.131148
+Senior     230960.784314
+    \end{Verbatim}
+
+    \hypertarget{part-5---calculate-salary-and-affordability-indexes}{%
+\section{Part 5 - Calculate salary and affordability
+indexes}\label{part-5---calculate-salary-and-affordability-indexes}}
+
+    Here comes the magic! Now that I have average salaries for NYC by level,
+I can use those to create a salary index, with NYC as the baseline at
+100, for each city/level combo I found. Once that cost of living index
+is calculated, I can derive an ``affordability'' index dividing the
+salary index for that city/country/level into the cost of living index
+for that city/country. So for example if the salary index is 80 (80\% of
+NYC) but the cost of living index is 40 (50\% of NYC), then that
+location for that experience level is twice as affordable as NYC
+(80/40=2x) or affordability = 200 meaning your money goes twice as far
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{32}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{merge}\PY{p}{(}\PY{n}{left}\PY{o}{=}\PY{n}{sal\PYZus{}by\PYZus{}city}\PY{p}{,}\PY{n}{right}\PY{o}{=}\PY{n}{NYC\PYZus{}by\PYZus{}level}\PY{p}{,}
+                           \PY{n}{how}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{left}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{on}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{explevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{}Pull in NYC salary/level}
+\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sal\PYZus{}index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{avg\PYZus{}salary}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PYZbs{}
+    \PY{o}{/}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{NYC\PYZus{}avg\PYZus{}salary}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{100} \PY{c+c1}{\PYZsh{} Calculate salary index}
+\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{merge}\PY{p}{(}\PY{n}{left}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{,}
+                           \PY{n}{right}\PY{o}{=}\PY{n}{cost\PYZus{}of\PYZus{}living}\PY{p}{,}
+                           \PY{n}{how}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{left}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                           \PY{n}{on}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{City}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)} 
+\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sal\PYZus{}index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PYZbs{}
+    \PY{o}{/}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RealCOL\PYZus{}Index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{100}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+     Country       City State explevel  avg\_salary  NYC\_avg\_salary  \textbackslash{}
+0  Australia   Canberra     -   Junior     93000.0   156672.131148
+1  Australia  Melbourne     -   Junior     67000.0   156672.131148
+2  Australia  Melbourne     -   Senior    142000.0   230960.784314
+3  Australia     Sydney     -   Junior    108000.0   156672.131148
+4  Australia     Sydney     -   Senior    285000.0   230960.784314
+
+    sal\_index  Rank  Cost of Living Index  Rent Index  RealCOL\_Index  \textbackslash{}
+0   59.359632   NaN                 75.94       42.50          60.26
+1   42.764466   NaN                 76.76       38.65          58.90
+2   61.482299   NaN                 76.76       38.65          58.90
+3   68.933766   NaN                 83.21       58.03          71.41
+4  123.397572   NaN                 83.21       58.03          71.41
+
+   Groceries Index  Restaurant Price Index  Local Purchasing Power Index  \textbackslash{}
+0            76.81                   79.07                        105.11
+1            77.78                   74.68                        102.16
+2            77.78                   74.68                        102.16
+3            79.65                   73.06                        104.52
+4            79.65                   73.06                        104.52
+
+  Alpha-2 code Alpha-3 code  Numeric  affordability
+0           AU          AUS     36.0      98.505861
+1           AU          AUS     36.0      72.605205
+2           AU          AUS     36.0     104.384209
+3           AU          AUS     36.0      96.532371
+4           AU          AUS     36.0     172.801529
+    \end{Verbatim}
+
+    \hypertarget{part-6---slice-and-analyze-the-results}{%
+\section{Part 6 - Slice and analyze the
+results}\label{part-6---slice-and-analyze-the-results}}
+
+    I want to rank order affordability individually for junior and senior
+people, as well as overall. For overall, I will average the
+affordability index for junior and senior people. But I think it's more
+interesting to look at junior and senior people separately to see if
+there are big differences
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{33}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} First delete all the NaN\PYZsq{}s, which represent cities for which we have no}
+\PY{c+c1}{\PYZsh{} cost of living index and thus no affordability calculation}
+\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{notna}\PY{p}{(}\PY{p}{)}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} Now slice the data into Junior vs Senior people, and also average the}
+\PY{c+c1}{\PYZsh{} affordability for each city/state/country}
+\PY{n}{afford\PYZus{}city\PYZus{}junior}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{explevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Junior}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{afford\PYZus{}city\PYZus{}junior}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}junior}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{City}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                                       \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RealCOL\PYZus{}Index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sal\PYZus{}index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                                       \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]} \PY{c+c1}{\PYZsh{} slice columns needed}
+\PY{n}{afford\PYZus{}city\PYZus{}senior}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{explevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Senior}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\PY{n}{afford\PYZus{}city\PYZus{}senior}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}senior}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{City}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                                       \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RealCOL\PYZus{}Index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sal\PYZus{}index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+                                       \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]} \PY{c+c1}{\PYZsh{} slice columns needed}
+\PY{c+c1}{\PYZsh{} Now group everything, averaging out the indexes for junior and senior people}
+\PY{n}{afford\PYZus{}city\PYZus{}both}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Country}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{City}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{State}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PYZbs{}
+    \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{agg}\PY{p}{(}
+                        \PY{n}{RealCOL\PYZus{}Index}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RealCOL\PYZus{}Index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{)}\PY{p}{,}
+                        \PY{n}{sal\PYZus{}index}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sal\PYZus{}index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{)}\PY{p}{,}
+                        \PY{n}{affordability}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{)}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Sort all 3 tables descending by affordability}
+\PY{n}{afford\PYZus{}city\PYZus{}junior}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}junior}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                                                \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\PY{n}{afford\PYZus{}city\PYZus{}junior}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}junior}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                                                \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\PY{n}{afford\PYZus{}city\PYZus{}senior}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}senior}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                                                \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\PY{n}{afford\PYZus{}city\PYZus{}both}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}both}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                                                \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Top five most affordable cities for JUNIOR data scientists:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{afford\PYZus{}city\PYZus{}junior}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Top five most affordable cities for SENIOR data scientists:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{afford\PYZus{}city\PYZus{}senior}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Top five most affordable cities for data scientists regardless of }\PY{l+s+se}{\PYZbs{}}
+\PY{l+s+s2}{level:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{afford\PYZus{}city\PYZus{}both}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Top five most affordable cities for JUNIOR data scientists:
+                  Country        City State  RealCOL\_Index   sal\_index  \textbackslash{}
+79   United Arab Emirates       Dubai     -          54.83   93.826515
+109         United States    Berkeley    CA          91.48  155.100973
+233         United States     Oakland    CA          90.52  151.909595
+244         United States  Pittsburgh    PA          62.10  104.038924
+87          United States   Ann Arbor    MI          59.82  100.209271
+
+     affordability
+79      171.122587
+109     169.546320
+233     167.818819
+244     167.534500
+87      167.518005
+Top five most affordable cities for SENIOR data scientists:
+           Country         City State  RealCOL\_Index   sal\_index  \textbackslash{}
+271  United States  San Antonio    TX          51.19  173.189575
+43           India       Mumbai     -          24.82   57.152560
+198  United States  Los Angeles    CA          76.98  170.358591
+33           India    Bangalore     -          19.01   34.767807
+302  United States        Tulsa    OK          46.68   82.265048
+
+     affordability
+271     338.326968
+43      230.268169
+198     221.302405
+33      182.892199
+302     176.231894
+Top five most affordable cities for data scientists regardless of level:
+                 Country         City State  RealCOL\_Index   sal\_index  \textbackslash{}
+92         United States  San Antonio    TX          51.19  123.295635
+73         United States  Los Angeles    CA          76.98  144.919438
+25                 India       Mumbai     -          24.82   44.533170
+99         United States        Tulsa    OK          46.68   82.265048
+42  United Arab Emirates        Dubai     -          54.83   93.826515
+
+    affordability
+92     240.858830
+73     188.255960
+25     179.424537
+99     176.231894
+42     171.122587
+    \end{Verbatim}
+
+    \hypertarget{part-7---comparing-junior-to-senior-affordability}{%
+\section{Part 7 - Comparing junior to senior
+affordability}\label{part-7---comparing-junior-to-senior-affordability}}
+
+    If we plot the kernel density of affordability indexes to see if there
+are insights, an interesting insight comes out of it: Both affordability
+plots seem pretty normally distributed. But given that 100 is the index
+base for NYC, we see the following:
+
+\begin{itemize}
+\tightlist
+\item
+  For Senior people, New York is right in the middle of the distribution
+  meaning there are as many cities less affordable than NYC than more
+\item
+  However, for Junior people, the median of the distribution is shifted
+  to the left meaning there are more cities that are more affordable
+  than NYC than there are those less affordable. Seems NYC hero worship
+  of experience, and making lower level people suffer, are alive and
+  well!
+\end{itemize}
+
+One other thing of note is that the distribution of affordability for
+Senior people has a long ``tail'' to the right, suggesting that there
+are outliers in the data where Senior people were well overpaid to be
+lured to a low cost of living city. Digging into the data, this seems to
+be why San Antonio found its way into the top 5 for Senior people
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{junior\PYZus{}scores}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}junior}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{junior\PYZus{}scores}\PY{o}{=}\PY{n}{junior\PYZus{}scores}\PY{o}{.}\PY{n}{rename}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Junior}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} rename}
+\PY{n}{senior\PYZus{}scores}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}senior}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{junior\PYZus{}scores}\PY{o}{=}\PY{n}{junior\PYZus{}scores}\PY{o}{.}\PY{n}{rename}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Senior}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} rename}
+\PY{n}{fig} \PY{o}{=} \PY{n}{sns}\PY{o}{.}\PY{n}{kdeplot}\PY{p}{(}\PY{n}{junior\PYZus{}scores}\PY{p}{,} \PY{n}{fill}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{r}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} plot junior scores}
+\PY{n}{fig} \PY{o}{=} \PY{n}{sns}\PY{o}{.}\PY{n}{kdeplot}\PY{p}{(}\PY{n}{senior\PYZus{}scores}\PY{p}{,} \PY{n}{fill}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{b}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{c+c1}{\PYZsh{} plot senior scores}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{City Affordability Distribution \PYZhy{} JUNIOR Data Scientists}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Density}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Affordability Index (NYC=100)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{n}{labels}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Junior DS}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Senior DS}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}\PY{n}{loc}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{upper right}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_22_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{part-8---identifying-factors-driving-affordability}{%
+\section{Part 8 - Identifying factors driving
+affordability}\label{part-8---identifying-factors-driving-affordability}}
+
+    One other useful graphing analysis looks at what drives affordability in
+a given city for data scientists, and if it's different for Junior
+versus Senior people. If cost of living and salaries are in synch, there
+shouldn't be much to infer. But what if they are not? I looked at two
+possible factors:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\tightlist
+\item
+  Affordability is driven by cost-of-living - meaning, cities with lower
+  cost of living (including housing) are more affordable even despite
+  paying lower salaries.\\
+\item
+  Affordability is driven by salaries - meaning, cities with higher
+  salaries are more affordable even when real cost of living is high
+\end{enumerate}
+
+What the below plots seem to show is :
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\tightlist
+\item
+  Cost of living isn't a very big driver of affordability of a place.\\
+  The vast majority of cities are cheaper than NYC, but as many of them
+  are less affordable (affordability index \textless100) as more
+  affordable, and it doesn't seem to matter how cheap a place is to
+  live.\\
+  The flat trendline on the first graph shows this
+\item
+  On the other hand, the second plot seems to suggest that local
+  salaries are a significant driver of affordability. The more money you
+  make, both at a junior and senior level, the more a specific city is
+  affordable no mater what the local cost of living is
+\end{enumerate}
+
+It could be that some of my assumptions (especially assuming offshore
+salaries are in USD in that file) are faulty. It could also be that the
+data sample size is too small. But hopefully I've demonstrated the power
+of data analytics!
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Now show regression of affordability vs cost of living to see if strong}
+\PY{c+c1}{\PYZsh{} relationshp}
+\PY{n}{data\PYZus{}to\PYZus{}plot}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{explevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RealCOL\PYZus{}Index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+\PY{n}{sns}\PY{o}{.}\PY{n}{lmplot}\PY{p}{(}\PY{n}{x} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RealCOL\PYZus{}Index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+            \PY{n}{y} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+            \PY{n}{hue} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{explevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+            \PY{n}{data}\PY{o}{=}\PY{n}{data\PYZus{}to\PYZus{}plot}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Affordability Index (NYC=100)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Real Cost of Living Index (NYC=100)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Finally, show regression of affordability vs salaries to see if strong}
+\PY{c+c1}{\PYZsh{} relationshp}
+\PY{n}{data\PYZus{}to\PYZus{}plot}\PY{o}{=}\PY{n}{afford\PYZus{}city\PYZus{}level}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{explevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sal\PYZus{}index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+\PY{n}{sns}\PY{o}{.}\PY{n}{lmplot}\PY{p}{(}\PY{n}{x} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sal\PYZus{}index}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+            \PY{n}{y} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{affordability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+            \PY{n}{hue} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{explevel}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+            \PY{n}{data}\PY{o}{=}\PY{n}{data\PYZus{}to\PYZus{}plot}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Affordability Index (NYC=100)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Salary Index (NYC=100)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_25_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_25_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{thank-you-for-listening-to-my-ted-talk}{%
+\section{Thank you for listening to my TED
+Talk}\label{thank-you-for-listening-to-my-ted-talk}}
+
+I enjoyed this class a ton! I can't believe how much I learned in two
+languages I had never seen (and one, ``R'', that I'd never even heard
+of.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
